@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+	<version><![CDATA[1.0]]></version>
+	<description><![CDATA[lorem ipsum dolor sit amet]]></description>
+	<route><![CDATA[site]]></route>
+</module>
