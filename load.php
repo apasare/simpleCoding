@@ -18,8 +18,24 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('SIMPLECODING_ROOT', getcwd()); // framework's root folder
+define('SL', '/'); // slash
+define('BSL', '\\'); // backslash
+define('CS', '_'); // class name separator
 
-require_once 'load.php';
+set_include_path(implode(PATH_SEPARATOR, array(
+	SIMPLECODING_ROOT.SL.'lib',
+	SIMPLECODING_ROOT.SL.'application'.SL.'modules',
+	SIMPLECODING_ROOT.SL.'config'
+)));
 
-SimpleCoding::start();
+function __autoload($class_name){
+	$path = str_replace(CS, SL, $class_name).'.php';
+    
+	require_once $path;
+}
+
+function error_to_exception_handler($errno, $errmsg, $errfile, $errline){
+	throw new ErrorException($errmsg, 0, $errno, $errfile, $errline);
+}
+
+set_error_handler('error_to_exception_handler');

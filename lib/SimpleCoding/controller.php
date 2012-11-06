@@ -18,8 +18,14 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('SIMPLECODING_ROOT', getcwd()); // framework's root folder
+class controller extends simpleCoding_default{
+	function loadView($template, $output = true){
+		global $config;
 
-require_once 'load.php';
-
-SimpleCoding::start();
+		if(!$output)
+			ob_start();		
+		require $config['base_path'].$config['folders']['views'].SL.trim($template, SL).$config['extensions']['view_file'];
+		if(!$output)
+			return ob_get_clean();
+	}
+}

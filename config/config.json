@@ -1,0 +1,34 @@
+{
+    "url_rewrite": true,
+    "timezone": "Europe/Bucharest",
+    "extension": {
+        "controller_file": "php",
+        "view_file": "phtml",
+        "model_file": "php"
+    },
+    "suffixe": {
+        "trigger": "Trigger"
+    },
+    "default": {
+        "module": "site",
+        "controller": "index",
+        "trigger": "index"
+    },
+    "log": {
+        "display_errors": true,
+        "message_type": 3,
+        "mail_to": ""
+    },
+    "session": {
+        "lifetime": "3600"
+    },
+    "modules": {
+        "config_file": "config.json",
+        "repository": "application/modules",
+        "workplaces": {
+            
+        },
+        "models": "models",
+        "controllers": "controllers"
+    },
+}
