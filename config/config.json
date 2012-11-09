@@ -1,34 +1,37 @@
 {
     "url_rewrite": true,
     "timezone": "Europe/Bucharest",
-    "extension": {
-        "controller_file": "php",
-        "view_file": "phtml",
-        "model_file": "php"
+    "errors": {
+        "display_errors": true,
+        "message_type": "3",
+        "mail_to": "",
+        "repository": "temp/errors"
     },
-    "suffixe": {
-        "trigger": "Trigger"
+    "sessions": {
+        "lifetime": "3600",
+        "repository": "temp/sessions"
     },
-    "default": {
+    "defaults": {
         "module": "site",
         "controller": "index",
         "trigger": "index"
-    },
-    "log": {
-        "display_errors": true,
-        "message_type": 3,
-        "mail_to": ""
-    },
-    "session": {
-        "lifetime": "3600"
-    },
-    "modules": {
+    }, 
+   "modules": {
         "config_file": "config.json",
         "repository": "application/modules",
-        "workplaces": {
-            
+        "workspaces": [
+            ""
+        ],
+        "models": {
+            "repository": "models"
         },
-        "models": "models",
-        "controllers": "controllers"
+        "controllers": {
+            "repository": "controllers",
+            "trigger_suffix": "Trigger"
+        }
     },
+    "views": {
+        "repository": "application/views",
+        "file_extension": "phtml"
+    }
 }

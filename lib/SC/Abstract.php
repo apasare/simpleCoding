@@ -18,7 +18,7 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class simpleCoding_default{
+class SC_Abstract{
 	function getModel($model){
 		return simpleCoding::getModel($model);
 	}
@@ -81,10 +81,5 @@ class simpleCoding_default{
 	
 	function getFullUri($index = null){
 		return parseUri::getFullUri($index);
-	}
-	
-	function translate(){
-		$args = func_get_args();
-		return call_user_func_array(array(simpleCoding::getSingleton('translate'), 'l10n'),$args);
 	}
 }

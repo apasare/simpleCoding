@@ -18,7 +18,7 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class sql{
+class SC_Sql{
 	public $pdo;
 	
 	function __construct($connect_data = array()){

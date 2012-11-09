@@ -18,10 +18,8 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class site_controllers_index extends controller{
+class site_controllers_index extends SC_Controller{
 	function indexTrigger(){
 		$this->loadView('default');
 	}
 }
-
-?>

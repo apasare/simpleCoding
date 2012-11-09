@@ -18,14 +18,19 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class controller extends simpleCoding_default{
-	function loadView($template, $output = true){
-		global $config;
-
-		if(!$output)
-			ob_start();		
-		require $config['base_path'].$config['folders']['views'].SL.trim($template, SL).$config['extensions']['view_file'];
-		if(!$output)
-			return ob_get_clean();
-	}
+class SC_Controller extends SC_Abstract{
+    function loadView($template, $output = true){
+        if(!$output){
+            ob_start();
+        }
+        
+        require SC_Config::getOption('base_path').SL.
+            SC_Config::getOption('views/repository').SL.
+            trim($template, SL).'.'.
+            SC_Config::getOption('views/file_extension');
+        
+        if(!$output){
+            return ob_get_clean();
+        }
+    }
 }

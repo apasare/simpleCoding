@@ -18,7 +18,7 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class request{
+class SC_Request{
 	function isPost(){
 		return $_SERVER['REQUEST_METHOD']=='POST';
 	}
@@ -27,32 +27,31 @@ class request{
 		return $_SERVER['REQUEST_METHOD']=='GET';		
 	}
 	
-	function get($global_var, $key){
-		if($key)
-			if(isset($global_var[$key]))
-				if(is_array($global_var[$key]))
-					return new simpleCoding_object($global_var[$key]);
-				else
-					return $global_var[$key];
-			else
+	function get($global_var, $key = ''){
+		if($key){
+			if(isset($global_var[$key])){
+                return $global_var[$key];
+			}else{
 				return false;
-		
-		return new simpleCoding_object($global_var);
+            }
+		}
+        
+		return $global_var;
 	}
 	
-	function getRequest($key = '', $params = array()){
+	function getRequest($key = ''){
 		$data = $this->get($_REQUEST, $key);
 		
 		return $data;
 	}
 	
-	function getPost($key = '', $params = array()){
+	function getPost($key = ''){
 		$data = $this->get($_POST, $key);
 		
 		return $data;
 	}
 	
-	function getGet($key = '', $params = array()){
+	function getGet($key = ''){
 		$data = $this->get($_GET, $key);
 		
 		return $data;

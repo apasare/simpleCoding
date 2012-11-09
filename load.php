@@ -23,19 +23,15 @@ define('BSL', '\\'); // backslash
 define('CS', '_'); // class name separator
 
 set_include_path(implode(PATH_SEPARATOR, array(
-	SIMPLECODING_ROOT.SL.'lib',
-	SIMPLECODING_ROOT.SL.'application'.SL.'modules',
-	SIMPLECODING_ROOT.SL.'config'
+    SIMPLECODING_ROOT.SL.'application'.SL.'modules',
+    SIMPLECODING_ROOT.SL.'lib',
+    SIMPLECODING_ROOT.SL.'config'
 )));
 
 function __autoload($class_name){
-	$path = str_replace(CS, SL, $class_name).'.php';
+    $path = str_replace(CS, SL, $class_name).'.php';
     
-	require_once $path;
+    require_once $path;
 }
 
-function error_to_exception_handler($errno, $errmsg, $errfile, $errline){
-	throw new ErrorException($errmsg, 0, $errno, $errfile, $errline);
-}
-
-set_error_handler('error_to_exception_handler');
+set_error_handler('SC::errorToExceptionHandler', E_ALL);

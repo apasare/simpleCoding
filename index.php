@@ -22,4 +22,4 @@ define('SIMPLECODING_ROOT', getcwd()); // framework's root folder
 
 require_once 'load.php';
 
-SimpleCoding::start();
+SC::start();
