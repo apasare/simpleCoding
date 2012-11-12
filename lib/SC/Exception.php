@@ -48,6 +48,6 @@ class SC_Exception{
                 break;
         }
         
-        SC_Log::add($error, $this->_params['message_type'], $destination, $headers);
+        SC::log($error, $this->_params['message_type'], $destination, $headers);
 	}
 }

@@ -19,18 +19,22 @@
  */
 
 class SC_Sql{
+    private $connected = false;
+    
 	public $pdo;
 	
 	function __construct($connect_data = array()){
-		global $sql;
-		
-		$connect_data = array_merge($sql, $connect_data);
-		$this->connect($connect_data);
+        if(count($connect_data)){
+    		$this->connect($connect_data);
+        }
 	}
 	
 	function connect($connect_data, $driver_options = array()){
 		$dsn = $connect_data['driver'].':host='.$connect_data['host'].';dbname='.$connect_data['database'];
 		$this->pdo = new PDO($dsn, $connect_data['username'], $connect_data['password'], $driver_options);
+        $this->connected = true;
+        
+        return $this;
 	}
 	
 	function startTransaction(){
@@ -87,12 +91,16 @@ class SC_Sql{
 	function getLastInsertId($name = ''){
 		return $this->pdo->lastInsertId($name);
 	}
+    
+    function isConnected(){
+        return $this->connected;
+    }
 	
 	function close(){
 		$this->pdo = null;
 	}
 	
 	function __destruct(){
-		$this->pdo = null;
+		$this->close();
 	}
 }

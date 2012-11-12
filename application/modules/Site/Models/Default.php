@@ -18,8 +18,8 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$sql['driver'] = 'mysql';
-$sql['host'] = 'localhost';
-$sql['username'] = '';
-$sql['password'] = '';
-$sql['database'] = '';
+class Site_Models_Default extends SC_Abstract{
+    function testSql(){
+        
+    }
+}

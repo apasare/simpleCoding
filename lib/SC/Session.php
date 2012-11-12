@@ -19,41 +19,33 @@
  */
 
 class SC_Session{
-    static function start($name = null){
-        if(SC_Config::getOption('sessions/repository')){
-            $absolute_path = SC_Config::getOption('base_path').SL.SC_Config::getOption('sessions/repository');
-            if(!is_dir($absolute_path)){
-                self::generateFolders(SC_Config::getOption('sessions/repository'));
+    static function init($params, $name = null){
+        if(isset($params['save_path'])){
+            if(!is_dir($params['save_path'])){
+                SC_Helper::generateFolders($params['save_path']);
             }
-
-            session_save_path($absolute_path);
+            
+            session_save_path($params['save_path']);
         }
-
-        if(SC_Config::getOption('sessions/lifetime')){
-            session_set_cookie_params(SC_Config::getOption('sessions/lifetime'));
+        
+        if($params['lifetime']){
+            ini_set('session.gc_maxlifetime', $params['lifetime']);
+            session_set_cookie_params($params['lifetime']);
         }
-
+        
+        self::start($name);
+    }
+    
+    static function start($name = null){
         if($name){
             session_name($name);
         }
-
+        
         if(isset($_COOKIE[session_name()])){
             session_id($_COOKIE[session_name()]);
         }
-
-        session_start();
-    }
-
-    static private function generateFolders($relative_path){
-        $folder_path = SC_Config::getOption('base_path');
         
-        $folders = explode(SL, $relative_path);
-        foreach($folders as $folder){
-            $folder_path .= SL.$folder.SL;
-            if(!is_dir($folder_path)){
-                @mkdir($folder_path, 0755);
-            }
-        }
+        session_start();
     }
 
     static function get($session = null){

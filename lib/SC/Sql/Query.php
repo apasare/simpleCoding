@@ -18,7 +18,7 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC_Query{
+class SC_Sql_Query{
     public $statement;
     
     function __construct($pdo, $query, $params){

@@ -128,9 +128,9 @@ class SC_ParseUri{
 
     private static function loadController(){
         $class = ((self::$workspace)?self::$workspace.CS:'').
-            self::$module.CS.
+            ucfirst(self::$module).CS.
             SC_Config::getOption('modules/controllers/repository').CS.
-            str_replace(SL, CS, self::$controller);
+            ucfirst(str_replace(SL, CS, self::$controller));
         $class = new $class;
         
         $suffix = SC_Config::getOption('modules/controllers/trigger_suffix');

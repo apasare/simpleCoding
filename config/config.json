@@ -8,8 +8,18 @@
         "repository": "temp/errors"
     },
     "sessions": {
+        "use": true,
         "lifetime": "3600",
         "repository": "temp/sessions"
+    },
+    "sql":{
+        "default": {
+            "driver": "mysql",
+            "host": "localhost",
+            "database": "sc",
+            "username": "root",
+            "password": ""
+        }
     },
     "defaults": {
         "module": "site",
@@ -23,10 +33,10 @@
             ""
         ],
         "models": {
-            "repository": "models"
+            "repository": "Models"
         },
         "controllers": {
-            "repository": "controllers",
+            "repository": "Controllers",
             "trigger_suffix": "Trigger"
         }
     },

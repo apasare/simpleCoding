@@ -19,22 +19,23 @@
  */
 
 class SC{
-    private static $_singletons = array();
-
     static function start(){
         SC_Config::init();
-
+        
         try{
+            if(SC_Config::getOption('sessions/repository')){
+                $params['save_path'] = SC_Config::getOption('base_path').SL.
+                    SC_Config::getOption('sessions/repository');
+            }
+            $params['lifetime'] = SC_Config::getOption('sessions/lifetime');
+            SC_Session::init($params);
+            
             self::prepareModules();
-            SC_Session::start();
+            
             SC_ParseUri::start();
         }catch(Exception $e){
             new SC_Exception($e);
         }
-    }
-    
-    static function errorToExceptionHandler($errno, $errmsg, $errfile, $errline){
-        throw new ErrorException($errmsg, $errno, 0, $errfile, $errline);
     }
 
     private static function prepareModules(){
@@ -42,7 +43,7 @@ class SC{
             $path = SC_Config::getOption('base_path').SL.
                 SC_Config::getOption('modules/repository').
                 ($workspace?SL.$workspace:'');
-
+            
             $dh = opendir($path);
             while($dir = readdir($dh)){
                 if($dir == '.' || $dir == '..'){
@@ -60,7 +61,7 @@ class SC{
 
     private static function processConfigFile($path, $module){
         $config = json_decode(file_get_contents($path), true);
-
+        
         if(isset($config['route'])){
             SC_Config::setOption('_routes/'.$config['route'], $module);
         }
@@ -69,7 +70,7 @@ class SC{
     static function getModel($model, $singleton = false){
         $pieces = explode(SL, $model);
         $model_exists = false;
-
+        
         foreach(SC_Config::getOption('modules/workspaces') as $workspace){
             $model_path = SC_Config::getOption('base_path').
                 SC_Config::getOption('modules/repository').
@@ -88,95 +89,25 @@ class SC{
                 $pieces[0].CS.
                 str_replace(SL, CS, SC_Config::getOption('modules/models/repository')).
                 CS.$pieces[1];
-            if($singleton)
-                return self::getSingleton($class);
-            else
+            if($singleton){
+                return SC_Singleton::get($class);
+            }else{
                 return new $class;
-        }else
+            }
+        }else{
             throw new Exception('Model \''.$model.'\' does not exist');
+        }
     }
-
-    static function getSingleton($class_name){
-        if(!isset(self::$_singletons[$class_name]))
-            self::$_singletons[$class_name] = new $class_name;
-
-        return self::$_singletons[$class_name];
+    
+    static function log($error, $type = 3, $destination = null, $headers = null){
+        if(!is_dir(dirname($destination))){
+            SC_Helper::generateFolders(dirname($destination));
+        }
+        
+        error_log($error, $type, $destination, $headers);
     }
-
-    static function getCurrentUrl($get = array()){
-        $host = $_SERVER['HTTP_HOST'];
-        $protocol = 'http';
-        $get = array_merge($_GET, $get);
-
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){
-            $protocol = 'https';
-        }
-
-        $url = $protocol.':'.SL.SL.$host.$_SERVER['REQUEST_URI'];
-        if(count($get)){
-            foreach($get as $key => $value){
-                if($value !== null){
-                    $params[] = $key.'='.$value;
-                }
-            }
-
-            if(isset($params)){
-                $url .= '?'.implode('&', $params);
-            }
-        }
-
-        return $url;
-    }
-
-    static function getUrl($uri = null, $get = array()){
-        $host = $_SERVER['HTTP_HOST'];
-        $folder = trim(SC_Config::getOption('root_folder'), SL);
-        $protocol = 'http';
-        $get = array_merge($_GET, $get);
-        $full_uri = parseUri::getFullUri();
-
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){
-            $protocol = 'https';
-        }
-
-        $url = $protocol.':'.SL.SL.$host.SL;
-        if(strpos($full_uri[0], '~') === 0){
-            $url .= $full_uri[0].SL;
-            array_shift($full_uri);
-        }
-
-        if(!SC_Config::getOption('url_rewrite')){
-            $url .= 'index.php'.SL;
-        }
-
-        if($folder){
-            $url .= $folder.SL;
-        }
-
-        if($uri){
-            $uri = trim($uri, SL);
-            for($i=0; strpos($uri, '*') !== false && isset($full_uri[$i]); $i++)
-                $uri = preg_replace('/\*/', $full_uri[$i], $uri, 1);
-            $url .= $uri;
-        }
-
-        if(count($get)){
-            foreach($get as $key => $value){
-                if($value !== null){
-                    $params[] = $key.'='.$value;
-                }
-            }
-
-            if(isset($params)){
-                $url .= '?'.implode('&', $params);
-            }
-        }
-
-        return $url;
-    }
-
-    static function redirect($uri = null, $get = array()){
-        header('Location:'.self::getUrl($uri, $get));
-        die;
+    
+    static function errorToExceptionHandler($errno, $errmsg, $errfile, $errline){
+        throw new ErrorException($errmsg, $errno, 0, $errfile, $errline);
     }
 }

@@ -20,66 +20,76 @@
 
 class SC_Abstract{
 	function getModel($model){
-		return simpleCoding::getModel($model);
+		return SC::getModel($model);
 	}
 	
 	function getSingleton($class){
-		return simpleCoding::getSingleton($class);
+		return SC_Singleton::get($class);
 	}
 	
-	function getSql(){
-		return simpleCoding::getSingleton('sql');
+	function getSql($bypass_connection = false){
+		$sql = $this->getSingleton('SC_Sql');
+        
+        if(!$sql->isConnected() || $bypass_connection){
+            $sql->connect(SC_Config::getOption('sql/default'));
+        }
+        
+        return $sql;
 	}
 	
 	function getRequest(){
-		return simpleCoding::getSingleton('request');
+		return $this->getSingleton('SC_Request');
 	}
 	
 	function getEvent(){
-		return simpleCoding::getSingleton('event');
+		return $this->getSingleton('SC_Event');
 	}
 	
 	function getCurrentUrl(){
-		return simpleCoding::getCurrentUrl();
+		return SC_Helper::getCurrentUrl();
 	}
 	
 	function getUrl($uri = null, $get = array()){
-		return simpleCoding::getUrl($uri, $get);
+		return SC_Helper::getUrl($uri, $get);
 	}
 	
 	function redirect($uri = null, $get = array()){
-		simpleCoding::redirect($uri, $get);
+		SC_Helper::redirect($uri, $get);
 	}
+    
+    function redirectUrl($url){
+        SC_Helper:redirectUrl($url);
+    }
 	
 	function getSession($session = null){
-		return session::get($session);
+		return SC_Session::get($session);
 	}
 	
 	function setSession($session, $value){
-		return session::set($session, $value);
+		return SC_Session::set($session, $value);
 	}
 	
 	function unsetSession($session){
-		return session::set($session, null);
+		return SC_Session::set($session, null);
 	}
 	
 	function getModule(){
-		return parseUri::getModule();
+		return SC_ParseUri::getModule();
 	}
 	
 	function getController(){
-		return parseUri::getController();
+		return SC_ParseUri::getController();
 	}
 	
 	function getTrigger(){
-		return parseUri::getTrigger();
+		return SC_ParseUri::getTrigger();
 	}
 	
 	function getUri($index = null){
-		return parseUri::getUri($index);
+		return SC_ParseUri::getUri($index);
 	}
 	
 	function getFullUri($index = null){
-		return parseUri::getFullUri($index);
+		return SC_ParseUri::getFullUri($index);
 	}
 }
