@@ -19,41 +19,41 @@
  */
 
 class SC_Event{
-	private $_hooks;
-	
-	function add($hook, $event, $params = array()){
-		if(!isset($event[2])){
-			$event[2] = $params;
+    private $_hooks;
+
+    function add($hook, $event, $params = array()){
+        if(!isset($event[2])){
+            $event[2] = $params;
         }
-        
-		$this->_hooks[$hook][] = $event;
-	}
-	
-	function __call($hook, $params){
-		if(!isset($this->_hooks[$hook])){
-			return;
-		}
-        
-		foreach($this->_hooks[$hook] as $event){
-			if(is_array($event) && !method_exists($event[0], $event[1])){
-				throw new Exception($event[1]." does not exist");
+
+        $this->_hooks[$hook][] = $event;
+    }
+
+    function __call($hook, $params){
+        if(!isset($this->_hooks[$hook])){
+            return;
+        }
+
+        foreach($this->_hooks[$hook] as $event){
+            if(is_array($event) && !method_exists($event[0], $event[1])){
+                throw new Exception($event[1]." does not exist");
             }
-            
-			$_params = $event[2];
-			unset($event[2]);
-			call_user_func_array($event, $_params);
-		}
-	}
-	
-	function remove($hook, $event = null){
-		if(isset($this->_hooks[$hook])){
-			if(empty($event)){
-				unset($this->_hooks[$hook]);
-			}else{
-				$key = array_search($event, $this->_hooks[$hook]);
-				if($key !== false)
-					unset($this->_hooks[$hook][$key]);
-			}
+
+            $_params = $event[2];
+            unset($event[2]);
+            call_user_func_array($event, $_params);
         }
-	}
+    }
+
+    function remove($hook, $event = null){
+        if(isset($this->_hooks[$hook])){
+            if(empty($event)){
+                unset($this->_hooks[$hook]);
+            }else{
+                $key = array_search($event, $this->_hooks[$hook]);
+                if($key !== false)
+                    unset($this->_hooks[$hook][$key]);
+            }
+        }
+    }
 }

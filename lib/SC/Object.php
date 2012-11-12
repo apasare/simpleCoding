@@ -19,66 +19,66 @@
  */
 
 class SC_Object{
-	protected $_data;
+    protected $_data;
 
-	function __construct($data = array()){
-		$this->set($data);
-	}
-	
-	function __call($func, $args){
-		$func = preg_replace('/([A-Z]{1})/', '_$1', $func);
-		$func = strtolower($func);
-		
-		if(preg_match('/^get_/', $func)){
-			$func = preg_replace('/^get_/', '', $func);
-			if(isset($this->_data[$func])){
-				return $this->_data[$func];
-			}else{
-				return false;
+    function __construct($data = array()){
+        $this->set($data);
+    }
+
+    function __call($func, $args){
+        $func = preg_replace('/([A-Z]{1})/', '_$1', $func);
+        $func = strtolower($func);
+
+        if(preg_match('/^get_/', $func)){
+            $func = preg_replace('/^get_/', '', $func);
+            if(isset($this->_data[$func])){
+                return $this->_data[$func];
+            }else{
+                return false;
             }
-		}elseif(preg_match('/^set_/', $func)){
-			$func = preg_replace('/^set_/', '', $func);
-			if(isset($args[0])){
-				$this->set($func, $args[0]);
-			}else{
-				unset($this->_data[$func]);
+        }elseif(preg_match('/^set_/', $func)){
+            $func = preg_replace('/^set_/', '', $func);
+            if(isset($args[0])){
+                $this->set($func, $args[0]);
+            }else{
+                unset($this->_data[$func]);
             }
-		}
-		
-		return $this;
-	}
-	
-	function get($index = null){
-		if($index){
-			if(isset($this->_data[$index])){
-				return $this->_data[$index];
-			}else{
-				return false;
+        }
+
+        return $this;
+    }
+
+    function get($index = null){
+        if($index){
+            if(isset($this->_data[$index])){
+                return $this->_data[$index];
+            }else{
+                return false;
             }
-		}
-        
-		return $this->_data;
-	}
-	
-	function set($index, $_data = ''){
-		if(is_array($index)){
-			foreach($index as $key => $value){
-				$key = strtolower($key);
-				if(is_array($value)){
-					$this->_data[$key] = new simpleCoding_object($value);
-				}else{
-					$this->_data[$key] = $value;
+        }
+
+        return $this->_data;
+    }
+
+    function set($index, $_data = ''){
+        if(is_array($index)){
+            foreach($index as $key => $value){
+                $key = strtolower($key);
+                if(is_array($value)){
+                    $this->_data[$key] = new simpleCoding_object($value);
+                }else{
+                    $this->_data[$key] = $value;
                 }
-			}
-		}else{
-			$index = strtolower($index);
-			if(is_array($_data)){
-				$this->_data[$index] = new simpleCoding_object($_data);
-			}else{
-				$this->_data[$index] = $_data;
             }
-		}
-		
-		return $this;
-	}
+        }else{
+            $index = strtolower($index);
+            if(is_array($_data)){
+                $this->_data[$index] = new simpleCoding_object($_data);
+            }else{
+                $this->_data[$index] = $_data;
+            }
+        }
+
+        return $this;
+    }
 }

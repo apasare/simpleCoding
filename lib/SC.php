@@ -21,7 +21,7 @@
 class SC{
     static function start(){
         SC_Config::init();
-        
+
         try{
             if(SC_Config::getOption('sessions/repository')){
                 $params['save_path'] = SC_Config::getOption('base_path').SL.
@@ -29,9 +29,9 @@ class SC{
             }
             $params['lifetime'] = SC_Config::getOption('sessions/lifetime');
             SC_Session::init($params);
-            
+
             self::prepareModules();
-            
+
             SC_ParseUri::start();
         }catch(Exception $e){
             new SC_Exception($e);
@@ -43,7 +43,7 @@ class SC{
             $path = SC_Config::getOption('base_path').SL.
                 SC_Config::getOption('modules/repository').
                 ($workspace?SL.$workspace:'');
-            
+
             $dh = opendir($path);
             while($dir = readdir($dh)){
                 if($dir == '.' || $dir == '..'){
@@ -61,7 +61,7 @@ class SC{
 
     private static function processConfigFile($path, $module){
         $config = json_decode(file_get_contents($path), true);
-        
+
         if(isset($config['route'])){
             SC_Config::setOption('_routes/'.$config['route'], $module);
         }
@@ -70,7 +70,7 @@ class SC{
     static function getModel($model, $singleton = false){
         $pieces = explode(SL, $model);
         $model_exists = false;
-        
+
         foreach(SC_Config::getOption('modules/workspaces') as $workspace){
             $model_path = SC_Config::getOption('base_path').
                 SC_Config::getOption('modules/repository').
@@ -98,15 +98,15 @@ class SC{
             throw new Exception('Model \''.$model.'\' does not exist');
         }
     }
-    
+
     static function log($error, $type = 3, $destination = null, $headers = null){
         if(!is_dir(dirname($destination))){
             SC_Helper::generateFolders(dirname($destination));
         }
-        
+
         error_log($error, $type, $destination, $headers);
     }
-    
+
     static function errorToExceptionHandler($errno, $errmsg, $errfile, $errline){
         throw new ErrorException($errmsg, $errno, 0, $errfile, $errline);
     }

@@ -20,34 +20,34 @@
 
 class SC_Sql_Query{
     public $statement;
-    
+
     function __construct($pdo, $query, $params){
-    	if(!($pdo instanceof PDO))
-    		return;
-   		
-		$this->statement = $pdo->prepare($query);
-		$this->statement->execute($params);
-		
-		if($this->statement->errorCode() != '00000'){
-			$error = $this->statement->errorInfo();
-			throw new exception('SQLSTATE '.$error[0].(isset($error[2])?': '.$error[2]:''));
-		}
-		
-		return $this;		
+        if(!($pdo instanceof PDO))
+            return;
+
+        $this->statement = $pdo->prepare($query);
+        $this->statement->execute($params);
+
+        if($this->statement->errorCode() != '00000'){
+            $error = $this->statement->errorInfo();
+            throw new exception('SQLSTATE '.$error[0].(isset($error[2])?': '.$error[2]:''));
+        }
+
+        return $this;		
     }
-	
-	function getRows($fetch_style = PDO::FETCH_OBJ){
-		if($this->statement instanceof PDOStatement)
-			return $this->statement->fetchAll($fetch_style);
-	}
-	
-	function getRow($fetch_style = PDO::FETCH_OBJ){
-		if($this->statement instanceof PDOStatement)
-			return $this->statement->fetch($fetch_style);
-	}
-	
-	function getAffectedRows(){
-		if($this->statement instanceof PDOStatement)
-			return $this->statement->rowCount();
-	}
+
+    function getRows($fetch_style = PDO::FETCH_OBJ){
+        if($this->statement instanceof PDOStatement)
+            return $this->statement->fetchAll($fetch_style);
+    }
+
+    function getRow($fetch_style = PDO::FETCH_OBJ){
+        if($this->statement instanceof PDOStatement)
+            return $this->statement->fetch($fetch_style);
+    }
+
+    function getAffectedRows(){
+        if($this->statement instanceof PDOStatement)
+            return $this->statement->rowCount();
+    }
 }
