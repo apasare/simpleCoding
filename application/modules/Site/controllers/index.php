@@ -19,7 +19,7 @@
  */
 
 class Site_Controllers_Index extends SC_Controller{
-	function indexTrigger(){
-		$this->loadView('default');
-	}
+    function indexTrigger(){
+        $this->loadView('default');
+    }
 }
