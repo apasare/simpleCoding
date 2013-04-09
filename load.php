@@ -18,20 +18,16 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('SL', '/'); // slash
-define('BSL', '\\'); // backslash
-define('CS', '_'); // class name separator
+define('SIMPLECODING_ROOT', getcwd()); // framework's root folder
+define('DS', DIRECTORY_SEPARATOR); // directory separator
+define('MODULES_REPOSITORY', 'application' . DS . 'modules');
 
 set_include_path(implode(PATH_SEPARATOR, array(
-    SIMPLECODING_ROOT.SL.'application'.SL.'modules',
-    SIMPLECODING_ROOT.SL.'lib',
-    SIMPLECODING_ROOT.SL.'config'
+    SIMPLECODING_ROOT . DS . MODULES_REPOSITORY,
+    SIMPLECODING_ROOT . DS . 'lib',
+    SIMPLECODING_ROOT . DS . 'config'
 )));
 
-function __autoload($class_name){
-    $path = str_replace(CS, SL, $class_name).'.php';
-    
-    require_once $path;
-}
+spl_autoload_register();
 
 set_error_handler('SC::errorToExceptionHandler', E_ALL);

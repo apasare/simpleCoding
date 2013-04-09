@@ -18,46 +18,53 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC_Config{
+namespace SC;
+
+class Config
+{
+    const CONFIG_FILE_PATH = 'config.ini';
+    const OPTION_PATH_SEPARATOR = '/';
+
     private static $_config = array();
     private static $_cache = array();
     
-    static function init(){
-        $json = file_get_contents(SIMPLECODING_ROOT.SL.'config'.SL.'config.json');
+    static function init()
+    {
+        self::$_config = parse_ini_file(self::CONFIG_FILE_PATH, true);
         
-        self::$_config = json_decode($json, true);
-        
-        if(!self::getOption('base_path')){
+        if (!self::getOption('base_path')) {
             self::setOption('base_path', SIMPLECODING_ROOT);
         }
-        if(!self::getOption('root_folder')){
+        
+        if (!self::getOption('root_folder')) {
             self::setOption(
                 'root_folder',
                 trim(str_replace(
                     realpath($_SERVER['DOCUMENT_ROOT']), 
                     '', 
-                    SC_Config::getOption('base_path')
-                ), BSL.SL)
+                    Config::getOption('base_path')
+                ), DS)
             );
         }
     }
     
-    static function getOption($path, $cache = true){
-        if(isset(self::$_cache[$path]) && $cache){
+    static function getOption($path, $cache = true)
+    {
+        if (isset(self::$_cache[$path]) && $cache) {
             return self::$_cache[$path];
         }
         
-        $pieces = explode(SL, $path);
+        $pieces = explode(self::OPTION_PATH_SEPARATOR, $path);
         
         $piece = array_shift($pieces);
-        if(!isset(self::$_config[$piece])){
+        if (!isset(self::$_config[$piece])) {
             return null;
         }
 
         $option = self::$_config[$piece];
         
-        while($piece = array_shift($pieces)){
-            if(!isset($option[$piece])){
+        while ($piece = array_shift($pieces)) {
+            if (!isset($option[$piece])) {
                 return null;
             }
             $option = $option[$piece];
@@ -68,34 +75,35 @@ class SC_Config{
         return $option;
     }
     
-    static function setOption($path, $value){
-        if(empty($path)){
+    static function setOption($path, $value)
+    {
+        if (empty($path)) {
             return;
         }
         
-        $pieces = explode(SL, $path);
+        $pieces = explode(self::OPTION_PATH_SEPARATOR, $path);
         
         $piece = array_shift($pieces);
-        if(!isset(self::$_config[$piece])){
-            if(count($pieces)){
+        if (!isset(self::$_config[$piece])) {
+            if (count($pieces)) {
                 self::$_config[$piece] = array();
-            }else{
+            } else {
                 self::$_config[$piece] = '';
             }
         }
 
-        $option =& self::$_config[$piece];
+        $option = &self::$_config[$piece];
         
-        while($piece = array_shift($pieces)){
-            if(!isset($option[$piece])){
-                if(count($pieces)){
+        while ($piece = array_shift($pieces)) {
+            if (!isset($option[$piece])) {
+                if (count($pieces)) {
                     $option[$piece] = array();
-                }else{
+                } else {
                     $option[$piece] = '';
                 }
             }
 
-            $option =& $option[$piece];
+            $option = &$option[$piece];
         }
         
         $option = $value;

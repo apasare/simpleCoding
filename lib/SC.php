@@ -18,66 +18,72 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC{
-    static function start(){
-        SC_Config::init();
+class SC
+{
+    static function start()
+    {
+        SC\Config::init();
 
-        try{
-            if(SC_Config::getOption('sessions/repository')){
-                $params['save_path'] = SC_Config::getOption('base_path').SL.
-                    SC_Config::getOption('sessions/repository');
+        try {
+            if (SC\Config::getOption('sessions/repository')) {
+                $params['save_path'] = SC\Config::getOption('base_path') . DS .
+                    SC\Config::getOption('sessions/repository');
             }
-            $params['lifetime'] = SC_Config::getOption('sessions/lifetime');
-            SC_Session::init($params);
+            $params['lifetime'] = SC\Config::getOption('sessions/lifetime');
+            SC\Session::init($params);
 
             self::prepareModules();
 
             SC_ParseUri::start();
-        }catch(Exception $e){
-            new SC_Exception($e);
+        } catch (Exception $e) {
+            new SC\Exception($e);
         }
     }
 
-    private static function prepareModules(){
-        foreach(SC_Config::getOption('modules/workspaces') as $workspace){
-            $path = SC_Config::getOption('base_path').SL.
-                SC_Config::getOption('modules/repository').
-                ($workspace?SL.$workspace:'');
-
-            $dh = opendir($path);
-            while($dir = readdir($dh)){
-                if($dir == '.' || $dir == '..'){
-                    continue;
-                }
-
-                $config_file = $path.SL.$dir.SL.SC_Config::getOption('modules/config_file');
-                if(is_file($config_file)){
-                    self::processConfigFile($config_file, $dir);
-                }
+    private static function prepareModules()
+    {
+        foreach(SC\Config::getOption('modules/workspaces') as $workspace)
+        {
+            $configFiles = glob(
+                MODULES_REPOSITORY . DS . 
+                ($workspace ? $workspace . DS : '') .
+                '*' . DS . SC\Config::getOption('modules/config_file')
+            );
+            foreach ($configFiles as $configFile) {
+                self::processConfigFile($configFile);
             }
-            closedir($dh);
         }
     }
 
-    private static function processConfigFile($path, $module){
-        $config = json_decode(file_get_contents($path), true);
+    private static function processConfigFile($path)
+    {
+        $config = parse_ini_file($path, true);
+        
+        $module = str_replace(
+            array(
+                MODULES_REPOSITORY . DS,
+                DS . SC\Config::getOption('modules/config_file')
+            ), 
+            '', 
+            $path
+        );
 
-        if(isset($config['route'])){
-            SC_Config::setOption('_routes/'.$config['route'], $module);
+        if (isset($config['route'])) {
+            SC\Config::setOption('_routes/' . $config['route'], $module);
         }
     }
 
     static function getModel($model, $singleton = false){
-        $pieces = explode(SL, $model);
+        $pieces = explode(DS, $model);
         $model_exists = false;
 
-        foreach(SC_Config::getOption('modules/workspaces') as $workspace){
-            $model_path = SC_Config::getOption('base_path').
-                SC_Config::getOption('modules/repository').
-                (($workspace)?SL.$workspace:'').SL.
-                $pieces[0].SL.
-                SC_Config::getOption('modules/models/repository').SL.
-                str_replace(CS, SL, $pieces[1]).'.php';
+        foreach(SC\Config::getOption('modules/workspaces') as $workspace){
+            $model_path = SC\Config::getOption('base_path').
+                SC\Config::getOption('modules/repository').
+                (($workspace)?DS.$workspace:'').DS.
+                $pieces[0].DS.
+                SC\Config::getOption('modules/models/repository').DS.
+                str_replace(CS, DS, $pieces[1]).'.php';
             if(is_file($model_path)){
                 $model_exists = true;
                 break;
@@ -87,7 +93,7 @@ class SC{
         if($model_exists){
             $class = (($workspace)?$workspace.CS:'').
                 $pieces[0].CS.
-                str_replace(SL, CS, SC_Config::getOption('modules/models/repository')).
+                str_replace(DS, CS, SC\Config::getOption('modules/models/repository')).
                 CS.$pieces[1];
             if($singleton){
                 return SC_Singleton::get($class);
@@ -99,15 +105,17 @@ class SC{
         }
     }
 
-    static function log($error, $type = 3, $destination = null, $headers = null){
-        if(!is_dir(dirname($destination))){
-            SC_Helper::generateFolders(dirname($destination));
+    static function log($error, $type = 3, $destination = null, $headers = null)
+    {
+        if (!is_dir(dirname($destination))) {
+            SC\Helper::generateFolders(dirname($destination));
         }
 
         error_log($error, $type, $destination, $headers);
     }
 
-    static function errorToExceptionHandler($errno, $errmsg, $errfile, $errline){
+    static function errorToExceptionHandler($errno, $errmsg, $errfile, $errline)
+    {
         throw new ErrorException($errmsg, $errno, 0, $errfile, $errline);
     }
 }

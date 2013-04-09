@@ -40,17 +40,17 @@ class SC_ParseUri{
         self::$uri = $_SERVER['REQUEST_URI'];
         self::$uri = preg_replace('/(\?)(.*)/', '', self::$uri);
         self::$uri = preg_replace(
-            '/^('.BSL.SL.str_replace(
-                array(SL, BSL), 
-                BSL.SL, 
+            '/^('.BDS.DS.str_replace(
+                array(DS, BDS), 
+                BDS.DS, 
                 SC_Config::getOption('root_folder')
             ).')/', 
             '', 
             self::$uri);
         self::$uri = str_replace('index.php', '', self::$uri);
-        self::$uri = preg_replace('/('.BSL.SL.'){2,}/', SL, self::$uri);
-        self::$uri = trim(self::$uri, SL);
-        self::$uri = explode(SL, self::$uri);
+        self::$uri = preg_replace('/('.BDS.DS.'){2,}/', DS, self::$uri);
+        self::$uri = trim(self::$uri, DS);
+        self::$uri = explode(DS, self::$uri);
         self::$full_uri = self::$uri;
         if(strpos(self::$uri[0], '~') === 0){
             array_shift(self::$uri);
@@ -66,18 +66,18 @@ class SC_ParseUri{
             $controller = array();
             $path = SC_Config::getOption('base_path').
                 SC_Config::getOption('modules/repository').
-                (($workspace)?SL.$workspace:'');
+                (($workspace)?DS.$workspace:'');
 
             if(!empty($uri[0])){
                 if(isset($routes[$uri[0]])){
-                    if(is_dir($path.SL.$routes[$uri[0]])){
+                    if(is_dir($path.DS.$routes[$uri[0]])){
                         self::$module = $routes[$uri[0]];
                         array_shift($uri);
                     }
                 }
             }
 
-            $path .= SL.self::$module.SL.
+            $path .= DS.self::$module.DS.
                 SC_Config::getOption('modules/controllers/repository');
 
             $is_last_dir = false;
@@ -85,7 +85,7 @@ class SC_ParseUri{
             for($i=0; $i<count($uri); $i++){
                 if(empty($uri[$i]))
                     continue;
-                $_path .= SL.$uri[$i];
+                $_path .= DS.$uri[$i];
 
                 if(is_dir($_path)){
                     $is_last_dir = true;
@@ -93,7 +93,7 @@ class SC_ParseUri{
                 }elseif(is_file($_path.'.php')){
                     $is_last_dir = false;
                     $controller[] = $uri[$i];
-                    self::$controller = implode(SL, $controller);
+                    self::$controller = implode(DS, $controller);
                     while($i+1){
                         array_shift($uri);
                         $i--;
@@ -102,7 +102,7 @@ class SC_ParseUri{
                 }else{
                     $is_last_dir = false;
                     $controller[] = SC_Config::getOption('defaults/controller');
-                    self::$controller = implode(SL, $controller);
+                    self::$controller = implode(DS, $controller);
                     break;
                 }
             }
@@ -115,10 +115,10 @@ class SC_ParseUri{
             }
             if($is_last_dir){
                 $controller[] = SC_Config::getOption('defaults/controller');
-                self::$controller = implode(SL, $controller);
+                self::$controller = implode(DS, $controller);
             }
 
-            if(file_exists($path.SL.self::$controller.'.php')){
+            if(file_exists($path.DS.self::$controller.'.php')){
                 break;
             }
         }
@@ -130,7 +130,7 @@ class SC_ParseUri{
         $class = ((self::$workspace)?self::$workspace.CS:'').
             ucfirst(self::$module).CS.
             SC_Config::getOption('modules/controllers/repository').CS.
-            ucfirst(str_replace(SL, CS, self::$controller));
+            ucfirst(str_replace(DS, CS, self::$controller));
         $class = new $class;
         
         $suffix = SC_Config::getOption('modules/controllers/trigger_suffix');

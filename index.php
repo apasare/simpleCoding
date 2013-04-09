@@ -18,8 +18,6 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('SIMPLECODING_ROOT', getcwd()); // framework's root folder
-
 require_once 'load.php';
 
 SC::start();

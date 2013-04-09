@@ -18,17 +18,21 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC_Helper{
-    static function getCurrentUrl($get = array()){
+namespace SC;
+
+class Helper
+{
+    static function getCurrentUrl($get = array())
+    {
         $host = $_SERVER['HTTP_HOST'];
         $protocol = 'http';
         $get = array_merge($_GET, $get);
         
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
             $protocol = 'https';
         }
         
-        $url = $protocol.':'.SL.SL.$host.$_SERVER['REQUEST_URI'];
+        $url = $protocol.':'.DS.DS.$host.$_SERVER['REQUEST_URI'];
         if(count($get)){
             foreach($get as $key => $value){
                 if($value !== null){
@@ -46,7 +50,7 @@ class SC_Helper{
     
     static function getUrl($uri = null, $get = array()){
         $host = $_SERVER['HTTP_HOST'];
-        $folder = trim(SC_Config::getOption('root_folder'), SL);
+        $folder = trim(SC_Config::getOption('root_folder'), DS);
         $protocol = 'http';
         $get = array_merge($_GET, $get);
         $full_uri = parseUri::getFullUri();
@@ -55,22 +59,22 @@ class SC_Helper{
             $protocol = 'https';
         }
         
-        $url = $protocol.':'.SL.SL.$host.SL;
+        $url = $protocol.':'.DS.DS.$host.DS;
         if(strpos($full_uri[0], '~') === 0){
-            $url .= $full_uri[0].SL;
+            $url .= $full_uri[0].DS;
             array_shift($full_uri);
         }
         
         if(!SC_Config::getOption('url_rewrite')){
-            $url .= 'index.php'.SL;
+            $url .= 'index.php'.DS;
         }
         
         if($folder){
-            $url .= $folder.SL;
+            $url .= $folder.DS;
         }
         
         if($uri){
-            $uri = trim($uri, SL);
+            $uri = trim($uri, DS);
             for($i=0; strpos($uri, '*') !== false && isset($full_uri[$i]); $i++)
                 $uri = preg_replace('/\*/', $full_uri[$i], $uri, 1);
             $url .= $uri;
@@ -101,15 +105,10 @@ class SC_Helper{
         die;
     }
     
-    static function generateFolders($absolute_path){
-        $folder_path = '';
-        
-        $folders = explode(SL, $absolute_path);
-        foreach($folders as $folder){
-            $folder_path .= $folder.SL;
-            if(!is_dir($folder_path)){
-                @mkdir($folder_path, 0755);
-            }
+    static function generateFolders($absolute_path)
+    {
+        if (!is_dir($absolute_path)) {
+            @mkdir($absolute_path, 0755, true);
         }
     }
 }

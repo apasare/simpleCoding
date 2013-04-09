@@ -18,36 +18,39 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC_Exception{
+namespace SC;
+
+class Exception{
     const CRLF = "\r\n";
     
     private $_params = array();
 	
-	function __construct(Exception $e){
-        $this->_params = array_merge($this->_params, SC_Config::getOption('errors'));
+	function __construct(\Exception $e)
+    {
+        $this->_params = array_merge($this->_params, Config::getOption('errors'));
         
 		$error = (date('H:i:s')).
             ' - Exception in '.$e->getFile().'('.$e->getLine().'): "'.$e->getMessage().'"'.self::CRLF.
             str_replace("\n", "\r\n", $e->getTraceAsString()).self::CRLF.self::CRLF;
 		
-		if($this->_params['display_errors']){
+		if ($this->_params['display_errors']) {
 			echo nl2br($error);
-		}else{
+		} else {
 			echo 'An error occured.';
 		}
         
         $destination = null;
         $headers = null;
-        switch($this->_params['message_type']){
+        switch ($this->_params['message_type']) {
             case 1:
                 $destination = $this->_params['mail_to'];
                 break;
             case 3:
-                $destination = SC_Config::getOption('base_path').SL.
-                    $this->_params['repository'].SL.time().rand(0, time());
+                $destination = Config::getOption('base_path').DS.
+                    $this->_params['repository'].DS.time().rand(0, time());
                 break;
         }
         
-        SC::log($error, $this->_params['message_type'], $destination, $headers);
+        \SC::log($error, $this->_params['message_type'], $destination, $headers);
 	}
 }

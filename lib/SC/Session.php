@@ -18,17 +18,21 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC_Session{
-    static function init($params, $name = null){
-        if(isset($params['save_path'])){
-            if(!is_dir($params['save_path'])){
-                SC_Helper::generateFolders($params['save_path']);
+namespace SC;
+
+class Session
+{
+    static function init($params, $name = null)
+    {
+        if (isset($params['save_path'])) {
+            if (!is_dir($params['save_path'])) {
+                SC\Helper::generateFolders($params['save_path']);
             }
             
             session_save_path($params['save_path']);
         }
         
-        if($params['lifetime']){
+        if ($params['lifetime']) {
             ini_set('session.gc_maxlifetime', $params['lifetime']);
             session_set_cookie_params($params['lifetime']);
         }
@@ -36,40 +40,43 @@ class SC_Session{
         self::start($name);
     }
     
-    static function start($name = null){
-        if($name){
+    static function start($name = null)
+    {
+        if ($name) {
             session_name($name);
         }
         
-        if(isset($_COOKIE[session_name()])){
+        if (isset($_COOKIE[session_name()])) {
             session_id($_COOKIE[session_name()]);
         }
         
         session_start();
     }
 
-    static function get($session = null){
-        if(!session_id()){
+    static function get($session = null)
+    {
+        if (!session_id()) {
             self::start();
         }
         
-        if($session === null){
+        if ($session === null) {
             return $_SESSION;
-        }else if(isset($_SESSION[$session])){
+        } else if (isset($_SESSION[$session])) {
             return $_SESSION[$session];
-        }else{
-            return false;
+        } else {
+            return null;
         }
     }
 
-    static function set($session, $value = null){
-        if(!session_id()){
+    static function set($session, $value = null)
+    {
+        if (!session_id()) {
             self::start();
         }
         
-        if($value === null){
+        if ($value === null) {
             unset($_SESSION[$session]);
-        }else{
+        } else {
             $_SESSION[$session] = $value;
         }
     }

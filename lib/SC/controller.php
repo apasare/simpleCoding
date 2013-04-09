@@ -24,9 +24,9 @@ class SC_Controller extends SC_Abstract{
             ob_start();
         }
         
-        require SC_Config::getOption('base_path').SL.
-            SC_Config::getOption('views/repository').SL.
-            trim($template, SL).'.'.
+        require SC_Config::getOption('base_path').DS.
+            SC_Config::getOption('views/repository').DS.
+            trim($template, DS).'.'.
             SC_Config::getOption('views/file_extension');
         
         if(!$output){
