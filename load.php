@@ -28,6 +28,22 @@ set_include_path(implode(PATH_SEPARATOR, array(
     SIMPLECODING_ROOT . DS . 'config'
 )));
 
-spl_autoload_register();
+/*
+ * PSR-0 autoloader
+ */
+function __autoload($className)
+{
+    $className = ltrim($className, '\\');
+    $fileName  = '';
+    $namespace = '';
+    if ($lastNsPos = strrpos($className, '\\')) {
+        $namespace = substr($className, 0, $lastNsPos);
+        $className = substr($className, $lastNsPos + 1);
+        $fileName  = str_replace('\\', DS, $namespace) . DS;
+    }
+    $fileName .= str_replace('_', DS, $className) . '.php';
 
-set_error_handler('SC::errorToExceptionHandler', E_ALL);
+    require_once $fileName;
+}
+
+//set_error_handler('SC::errorToExceptionHandler', E_ALL);

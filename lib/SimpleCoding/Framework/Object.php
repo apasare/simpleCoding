@@ -18,7 +18,9 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SC_Object{
+namespace SimpleCoding\Framework;
+
+class Object{
     protected $_data;
 
     function __construct($data = array()){

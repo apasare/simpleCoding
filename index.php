@@ -20,4 +20,4 @@
 
 require_once 'load.php';
 
-SC::start();
+SimpleCoding\Framework\Init::run();

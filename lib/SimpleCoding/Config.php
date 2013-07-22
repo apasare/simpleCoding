@@ -18,7 +18,7 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SC;
+namespace SimpleCoding;
 
 class Config
 {
