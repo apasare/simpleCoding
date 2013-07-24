@@ -18,7 +18,7 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Framework;
+namespace SimpleCoding\Core;
 
 class Object{
     protected $_data;

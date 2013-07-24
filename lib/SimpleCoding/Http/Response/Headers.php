@@ -18,40 +18,35 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Http;
+namespace SimpleCoding\Http\Response;
 
-use SimpleCoding\Http\Request;
+use SimpleCoding\Core;
 
-class Request
+class Headers extends Core\Object
 {
-    private $_headers;
-    private $_post;
-    private $_get;
-    
-    public function getHeaders()
+    protected function _updateData()
     {
-        if (null == $this->_headers) {
-            $this->_headers = new Request\Headers();
-        }
+        $this->_data = \headers_list();
         
-        return $this->_headers;
+        return $this;
     }
     
-    public function getPost()
+    public function __construct()
     {
-        if (null == $this->_post) {
-            $this->_post = new Request\Post();
-        }
+        $this->_updateData();
+    }
 
-        return $this->_post;
+    public function setHeader($name, $data, $replace = true, $httpResponseCode = null)
+    {
+        header($name . ': ' . $data, $replace, $httpResponseCode);
+        
+        return $this->_updateData();
     }
     
-    public function getGet()
+    public function removeHeader($name)
     {
-        if (null == $this->_get) {
-            $this->_get = new Request\Get();
-        }
-
-        return $this->_get;
+        header_remove($name);
+        
+        return $this->_updateData();
     }
 }

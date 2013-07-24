@@ -45,5 +45,3 @@ function __autoload($className)
 
     require_once $fileName;
 }
-
-//set_error_handler('SC::errorToExceptionHandler', E_ALL);

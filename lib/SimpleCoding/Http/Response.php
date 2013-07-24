@@ -20,38 +20,27 @@
 
 namespace SimpleCoding\Http;
 
-use SimpleCoding\Http\Request;
-
-class Request
+class Response
 {
     private $_headers;
-    private $_post;
-    private $_get;
+    private $_body;
+    
+    public function getBody()
+    {
+        return $this->_body;
+    }
+    
+    public function setBody($body)
+    {
+        $this->_body = $body;
+    }
     
     public function getHeaders()
     {
         if (null == $this->_headers) {
-            $this->_headers = new Request\Headers();
+            $this->_headers = new Response\Headers();
         }
         
         return $this->_headers;
-    }
-    
-    public function getPost()
-    {
-        if (null == $this->_post) {
-            $this->_post = new Request\Post();
-        }
-
-        return $this->_post;
-    }
-    
-    public function getGet()
-    {
-        if (null == $this->_get) {
-            $this->_get = new Request\Get();
-        }
-
-        return $this->_get;
     }
 }
