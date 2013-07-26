@@ -18,33 +18,22 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Core;
-
-use SimpleCoding\Http;
-
-class Framework
-{
-    private static $_request;
-    private static $_response;
-
-    public static function init()
-    {
-        
-    }
-    
-    public static function getResponse()
-    {
-        if (null == self::$_response) {
-            self::$_response = new Http\Response;
-        }
-        return self::$_response;
-    }
-    
-    public static function getRequest()
-    {
-        if (null == self::$_request) {
-            self::$_request = new Http\Request();
-        }
-        return self::$_request;
-    }
-}
+return array(
+    'mvc' => array(
+        'config' => array(
+            'repository' => 'conf'
+        ),
+        'models' => array(
+            'repository' => 'Model'
+        ),
+        'controllers' => array(
+            'repository' => 'Controller',
+            'default_controller' => 'Index',
+            'trigger_suffix' => 'Trigger',
+            'default_trigger' => 'index'
+        ),
+        'views' => array(
+            'repository' => 'View'
+        )
+    )
+);

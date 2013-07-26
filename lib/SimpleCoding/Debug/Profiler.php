@@ -23,6 +23,11 @@ namespace SimpleCoding\Debug;
 class Profiler
 {
     const CRLF = "\r\n";
+    
+    public static function getFilename($fragment)
+    {
+        return SIMPLECODING_ROOT . DS . 'temp' . DS . hash('md4', $fragment) . '.profile';
+    }
 
     protected static function output($fragment, $output, $mode)
     {
@@ -39,11 +44,6 @@ class Profiler
         $output .= self::CRLF;
         
         return $output;
-    }
-    
-    public static function getFilename($fragment)
-    {
-        return SIMPLECODING_ROOT . DS . 'temp' . DS . hash('md4', $fragment) . '.profile';
     }
     
     public static function getProfileData()

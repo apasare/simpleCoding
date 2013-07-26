@@ -20,12 +20,12 @@
 
 define('SIMPLECODING_ROOT', getcwd()); // framework's root folder
 define('DS', DIRECTORY_SEPARATOR); // directory separator
-define('MODULES_REPOSITORY', 'application' . DS . 'modules');
+define('MODULES_REPOSITORY', 'app' . DS . 'modules');
 
 set_include_path(implode(PATH_SEPARATOR, array(
     SIMPLECODING_ROOT . DS . MODULES_REPOSITORY,
     SIMPLECODING_ROOT . DS . 'lib',
-    SIMPLECODING_ROOT . DS . 'config'
+    SIMPLECODING_ROOT . DS . 'conf'
 )));
 
 /*

@@ -18,28 +18,14 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Http;
+namespace SimpleCoding\Http\Request;
 
-class Response
+use SimpleCoding\Framework\Core;
+
+class Server extends Core\Object
 {
-    private $_headers;
-    private $_body;
-    
-    public function getBody()
+    public function __construct()
     {
-        if (null == $this->_body) {
-            $this->_body = new Response\Body();
-        }
-        
-        return $this->_body;
-    }
-    
-    public function getHeaders()
-    {
-        if (null == $this->_headers) {
-            $this->_headers = new Response\Headers();
-        }
-        
-        return $this->_headers;
+        $this->_data =& $_SERVER;
     }
 }

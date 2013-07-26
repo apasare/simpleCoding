@@ -20,12 +20,14 @@
 
 namespace SimpleCoding\Http\Request;
 
-use SimpleCoding\Core;
+use SimpleCoding\Framework\Core;
 
 class Headers extends Core\Object
 {
     public function __construct()
     {
-        $this->_data = @\getallheaders();
+        if (function_exists('getallheaders')) {
+            $this->_data = \getallheaders();
+        }
     }
 }

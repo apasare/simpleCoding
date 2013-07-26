@@ -18,28 +18,32 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Http;
+namespace SimpleCoding\Http\Response;
 
-class Response
+class Body
 {
-    private $_headers;
-    private $_body;
+    protected $_output = '';
     
-    public function getBody()
+    public function get()
     {
-        if (null == $this->_body) {
-            $this->_body = new Response\Body();
-        }
-        
-        return $this->_body;
+        return $this->_output;
     }
     
-    public function getHeaders()
+    public function set($output)
     {
-        if (null == $this->_headers) {
-            $this->_headers = new Response\Headers();
-        }
+        $this->_output = $output;
         
-        return $this->_headers;
+        return $this;
+    }
+    
+    public function add($output)
+    {
+        $this->_output .= $output;
+        
+        return $this;
+    }
+    
+    protected function __toString() {
+        return $this->_output;
     }
 }

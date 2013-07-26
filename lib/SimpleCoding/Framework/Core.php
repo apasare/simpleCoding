@@ -18,50 +18,49 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Http;
+namespace SimpleCoding\Framework;
 
-use SimpleCoding\Http\Request;
+use SimpleCoding\Http;
 
-class Request
+class Core
 {
-    private $_headers;
-    private $_post;
-    private $_get;
-    private $_server;
+    private static $_request;
+    private static $_response;
+    private static $_config;
     
-    public function getHeaders()
+    public static function getResponse()
     {
-        if (null == $this->_headers) {
-            $this->_headers = new Request\Headers();
+        if (null == self::$_response) {
+            self::$_response = new Http\Response;
         }
         
-        return $this->_headers;
+        return self::$_response;
     }
     
-    public function getPost()
+    public static function getRequest()
     {
-        if (null == $this->_post) {
-            $this->_post = new Request\Post();
+        if (null == self::$_request) {
+            self::$_request = new Http\Request();
         }
-
-        return $this->_post;
+        
+        return self::$_request;
     }
     
-    public function getGet()
+    public static function getConfig()
     {
-        if (null == $this->_get) {
-            $this->_get = new Request\Get();
+        if (null == self::$_config) {
+            self::$_config = new Core\Config();
         }
-
-        return $this->_get;
+        
+        return self::$_config;
     }
-    
-    public function getServer()
-    {
-        if (null == $this->_server) {
-            $this->_server = new Request\Server();
-        }
 
-        return $this->_server;
+    public static function init()
+    {
+        try {
+            self::getConfig();
+        } catch(Exception $e) {
+
+        }
     }
 }

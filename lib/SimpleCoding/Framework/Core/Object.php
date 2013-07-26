@@ -18,16 +18,18 @@
  * along with simpleCoding.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SimpleCoding\Core;
+namespace SimpleCoding\Framework;
 
 class Object{
     protected $_data;
 
-    function __construct($data = array()){
+    public function __construct($data = array())
+    {
         $this->set($data);
     }
 
-    function __call($func, $args){
+    public function __call($func, $args)
+    {
         $func = preg_replace('/([A-Z]{1})/', '_$1', $func);
         $func = strtolower($func);
 
@@ -50,7 +52,8 @@ class Object{
         return $this;
     }
 
-    function get($index = null){
+    public function get($index = null)
+    {
         if($index){
             if(isset($this->_data[$index])){
                 return $this->_data[$index];
@@ -62,7 +65,8 @@ class Object{
         return $this->_data;
     }
 
-    function set($index, $_data = ''){
+    public function set($index, $_data = '')
+    {
         if(is_array($index)){
             foreach($index as $key => $value){
                 $key = strtolower($key);
@@ -82,5 +86,10 @@ class Object{
         }
 
         return $this;
+    }
+    
+    public function add($data)
+    {
+        $this->_data = array_merge($this->_data, $data);
     }
 }

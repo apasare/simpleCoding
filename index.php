@@ -20,15 +20,4 @@
 
 require_once 'load.php';
 
-use SimpleCoding\Core\Framework;
-
-Framework::init();
-
-$request = Framework::getRequest();
-$response = Framework::getResponse();
-
-//print_r($response->getHeaders()->get());
-$response->getHeaders()
-    ->removeHeader('X-Powered-By')
-    ->setHeader('Content-Type', 'text/plain', true, 404);
-print_r($response->getHeaders()->get());
+SimpleCoding\Framework\Core::init();

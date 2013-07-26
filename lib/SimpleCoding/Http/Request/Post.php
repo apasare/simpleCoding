@@ -20,9 +20,9 @@
 
 namespace SimpleCoding\Http\Request;
 
-use SimpleCoding\Framework;
+use SimpleCoding\Framework\Core;
 
-class Post extends Framework\Object
+class Post extends Core\Object
 {
     public function __construct()
     {
